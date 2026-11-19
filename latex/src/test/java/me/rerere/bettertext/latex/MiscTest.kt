@@ -113,6 +113,17 @@ class MiscTest {
     }
 
     @Test
+    fun multipleIntegralsAreWiderThanInt() {
+        // KaTeX's tables give ∬ and ∭ the width of ∫; the fonts don't.
+        fun opWidth(latex: String, display: Boolean) = symbols(boxes(latex, display)[0]).single().width
+        near(0.819f, opWidth("\\iint", display = false))
+        near(1.166f, opWidth("\\iiint", display = false))
+        near(1.084f, opWidth("\\iint", display = true))
+        near(1.592f, opWidth("\\iiint", display = true))
+        near(0.556f, opWidth("\\int", display = true))
+    }
+
+    @Test
     fun textOperators() {
         val top = boxes("\\sin x")
         assertEquals("mop", top[0].classes[0])

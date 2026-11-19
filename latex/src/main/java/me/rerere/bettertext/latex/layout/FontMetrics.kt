@@ -86,8 +86,29 @@ internal object FontMetrics {
             }
             result[font] = map
         }
+        for ((font, cp, width) in widthFixes) result[font]?.get(cp)?.set(4, width)
         return result
     }
+
+    /**
+     * Widths that KaTeX's tables get wrong. KaTeX lets the browser measure
+     * glyphs, so it never notices; we lay out with the table widths, so use
+     * the advance widths of the bundled fonts instead. The tables copy the
+     * width of ∫ to ∬ and ∭, which made the integrals overlap what follows.
+     */
+    private val widthFixes = listOf(
+        Triple("Size1-Regular", 0x222C, 0.819f),
+        Triple("Size1-Regular", 0x222D, 1.166f),
+        Triple("Size2-Regular", 0x222C, 1.084f),
+        Triple("Size2-Regular", 0x222D, 1.592f),
+        Triple("Main-Regular", 0xB0, 0.5f),
+        Triple("Main-Bold", 0xB0, 0.575f),
+        Triple("Main-Italic", 0xB0, 0.511f),
+        Triple("Main-BoldItalic", 0xB0, 0.789f),
+        Triple("SansSerif-Regular", 0xB0, 0.383f),
+        Triple("SansSerif-Bold", 0xB0, 0.617f),
+        Triple("SansSerif-Italic", 0xB0, 0.512f),
+    )
 
     /** Rough approximations for characters missing from the fonts. */
     private val extraCharacterMap: Map<Char, Char> = buildMap {
