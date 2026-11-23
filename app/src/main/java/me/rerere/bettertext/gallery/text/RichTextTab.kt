@@ -17,9 +17,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -64,7 +64,8 @@ private val citations = mapOf(
 /** BetterText paragraphs mixing text, math, color swatches and citations. */
 @Composable
 internal fun RichTextTab(contentPadding: PaddingValues) {
-    var fraction by rememberSaveable { mutableFloatStateOf(1f) }
+    val fractionSlider = rememberSliderState(1f, trackRange = 0.3f..1f)
+    val fraction = fractionSlider.value
     var useLineHeight by rememberSaveable { mutableStateOf(true) }
     var cited by rememberSaveable { mutableIntStateOf(0) }
     val bodyLarge = MaterialTheme.typography.bodyLarge
@@ -83,7 +84,7 @@ internal fun RichTextTab(contentPadding: PaddingValues) {
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text("容器宽度 ${width.value.roundToInt()} dp", style = MaterialTheme.typography.labelLarge)
-            Slider(value = fraction, onValueChange = { fraction = it }, valueRange = 0.3f..1f)
+            Slider(state = fractionSlider, onValueChange = { fractionSlider.value = it })
             SwitchItem(
                 title = "使用 bodyLarge 行高（${bodyLarge.lineHeight}）",
                 checked = useLineHeight,

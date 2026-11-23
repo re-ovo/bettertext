@@ -6,7 +6,7 @@ plugins {
 android {
     namespace = "me.rerere.bettertext.text"
     compileSdk {
-        version = release(37)
+        version = release(37) { minorApiLevel = 1 }
     }
 
     defaultConfig {

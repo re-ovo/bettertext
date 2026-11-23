@@ -15,9 +15,9 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
@@ -39,7 +39,8 @@ import me.rerere.bettertext.ui.components.SwitchItem
 /** Shows how formulas break into lines as the available width changes. */
 @Composable
 internal fun WrappingScreen(onBack: () -> Unit) {
-    var fraction by rememberSaveable { mutableFloatStateOf(0.6f) }
+    val fractionSlider = rememberSliderState(0.6f, trackRange = 0.2f..1f)
+    val fraction = fractionSlider.value
     var formula by rememberSaveable { mutableIntStateOf(0) }
     var leqno by rememberSaveable { mutableStateOf(false) }
     val fontSize = MaterialTheme.typography.bodyLarge.fontSize
@@ -54,7 +55,7 @@ internal fun WrappingScreen(onBack: () -> Unit) {
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
                 Text("容器宽度 ${width.value.roundToInt()} dp", style = MaterialTheme.typography.labelLarge)
-                Slider(value = fraction, onValueChange = { fraction = it }, valueRange = 0.2f..1f)
+                Slider(state = fractionSlider, onValueChange = { fractionSlider.value = it })
 
                 Heading("行内公式自动换行", "只在顶层关系符、二元运算符和 \\allowbreak 之后断行，与浏览器中的 KaTeX 一致")
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

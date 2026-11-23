@@ -16,9 +16,9 @@ import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -56,7 +56,8 @@ internal fun PlaygroundScreen(initial: Sample?, onBack: () -> Unit) {
     var display by rememberSaveable { mutableStateOf(initial?.display ?: true) }
     var leqno by rememberSaveable { mutableStateOf(initial?.leqno ?: false) }
     var fleqn by rememberSaveable { mutableStateOf(initial?.fleqn ?: false) }
-    var fontSize by rememberSaveable { mutableFloatStateOf(18f) }
+    val fontSizeSlider = rememberSliderState(18f, trackRange = 10f..40f)
+    val fontSize = fontSizeSlider.value
     val macros = initial?.macros.orEmpty()
 
     val settings = LatexSettings(displayMode = display, leqno = leqno, fleqn = fleqn, macros = macros)
@@ -128,7 +129,7 @@ internal fun PlaygroundScreen(initial: Sample?, onBack: () -> Unit) {
                 SwitchItem("左对齐", fleqn, { fleqn = it }, index = 2, count = 3, description = "fleqn")
             }
             Text("字号 ${fontSize.roundToInt()} sp", style = MaterialTheme.typography.labelLarge)
-            Slider(value = fontSize, onValueChange = { fontSize = it }, valueRange = 10f..40f)
+            Slider(state = fontSizeSlider, onValueChange = { fontSizeSlider.value = it })
         }
     }
 }
